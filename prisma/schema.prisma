@@ -48,7 +48,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Blog[]
-  role Role @default(AUTHOR)
+  role Role @default(BASIC)
   reputation_point Int @default(0)
 }
 
@@ -67,7 +67,7 @@ model Blog {
   title String
   content String
   banner String
-  published PostStatus @default(DRAFT)
+  status PostStatus @default(DRAFT)
   author User @relation(fields: [authorId],references: [id])
   authorId String
   likes Int @default(0)
@@ -76,11 +76,9 @@ model Blog {
 enum PostStatus {
   DRAFT
   PUBLISHED
-  DELETED
 }
 
 enum Role {
   ADMIN
-  AUTHOR
-  READER
+  BASIC
 }
