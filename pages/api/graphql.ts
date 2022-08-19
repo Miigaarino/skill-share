@@ -4,13 +4,12 @@ import { ApolloServer } from "apollo-server-micro";
 
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
-import { resolvers, typeDefs } from "../../graphql";
+import { schema } from "../../graphql";
 
 import { createContext } from "../../graphql/context";
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   context: createContext,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 });

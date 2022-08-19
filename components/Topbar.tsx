@@ -17,7 +17,7 @@ export function Topbar() {
   const loading = status === "loading";
 
   return (
-    <header className=" shadow-md">
+    <header className="shadow-md">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex w-full items-center justify-between border-b py-3 lg:border-none">
           <Link href="/">
