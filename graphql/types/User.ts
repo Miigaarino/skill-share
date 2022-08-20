@@ -1,4 +1,4 @@
-import { enumType, extendType, objectType } from "nexus";
+import { enumType, extendType, objectType, stringArg } from "nexus";
 import { Blog } from "./Blog";
 
 export const User = objectType({
@@ -34,6 +34,23 @@ export const UsersQuery = extendType({
       type: "User",
       resolve(_, __, ctx) {
         return ctx.prisma.user.findMany();
+      },
+    });
+  },
+});
+
+export const UserQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.field("user", {
+      type: "User",
+      args: {
+        user_id: stringArg(),
+      },
+      async resolve(_, args, ctx) {
+        return await ctx.prisma.user.findUnique({
+          where: { id: args.user_id },
+        });
       },
     });
   },

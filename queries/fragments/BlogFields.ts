@@ -9,3 +9,17 @@ export const BlogsListItemFields = gql`
     banner
   }
 `;
+
+export const BlogDetailFields = gql`
+  fragment BlogDetailFields on Blog {
+    ...BlogsListItemFields
+    content
+    author {
+      id
+      name
+      image
+      email
+    }
+  }
+  ${BlogsListItemFields}
+`;

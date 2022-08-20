@@ -1,4 +1,4 @@
-import { enumType, extendType, objectType } from "nexus";
+import { enumType, extendType, objectType, stringArg } from "nexus";
 import { User } from "./User";
 
 import { asNexusMethod } from "nexus";
@@ -39,6 +39,23 @@ export const BlogsQuery = extendType({
       type: "Blog",
       resolve(_, __, ctx) {
         return ctx.prisma.blog.findMany({ where: { status: "PUBLISHED" } });
+      },
+    });
+  },
+});
+
+export const BlogQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.field("blog", {
+      type: "Blog",
+      args: {
+        blog_id: stringArg(),
+      },
+      async resolve(_, args, ctx) {
+        return await ctx.prisma.blog.findUnique({
+          where: { id: args.blog_id },
+        });
       },
     });
   },
