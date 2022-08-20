@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 
 import { BlogCard, HorizontalContainer, Loader } from "components";
 
-import { Query, QueryData, QueryVars } from "queries/UserQuery";
+import { Query, QueryData, QueryVars } from "queries/BlogsByUserQuery";
 import { useQuery } from "@apollo/client";
-import { toLocaleDate } from "utils";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Author() {
   const {
@@ -16,6 +16,8 @@ export default function Author() {
   const { data, loading, error } = useQuery<QueryData, QueryVars>(Query, {
     variables: { user_id: authorId as string },
   });
+
+  const { data: session } = useSession();
 
   if (loading) {
     return <Loader />;
@@ -33,18 +35,18 @@ export default function Author() {
             <div className="flex items-center rounded-3xl p-4 shadow-xl md:p-8">
               <img
                 className="mr-4 aspect-square h-20 rounded-full object-cover md:mr-8 lg:h-40"
-                src={data?.user.image}
-                alt={data?.user.name}
+                src={session?.user?.image as string}
+                alt={session?.user?.name as string}
               />
               <div className="flex flex-col">
                 <p className="mb-2 text-xl font-bold md:text-2xl">
-                  {data?.user.name}
+                  {session?.user?.name}
                 </p>
                 <p className="mb-4 text-sm sm:text-base md:mb-8">
-                  {data?.user.email}
+                  {session?.user?.email}
                 </p>
                 <p className="text-sm sm:text-base">
-                  Joined on {toLocaleDate(data?.user.createdAt as string)}
+                  Joined on {session?.user?.createdAt}
                 </p>
               </div>
             </div>
@@ -52,10 +54,10 @@ export default function Author() {
 
           <div className="rounded-3xl p-8 shadow-xl">
             <p className="mb-2 text-2xl font-bold md:mb-6">
-              Posts: {data?.user.posts.length}
+              Posts: {data?.blogsByUser.length}
             </p>
             <ul className="flex flex-col gap-4 md:gap-8">
-              {data?.user.posts.map((post) => (
+              {data?.blogsByUser.map((post) => (
                 <li
                   key={post.id}
                   className="overflow-hidden rounded-3xl shadow-2xl duration-500 hover:opacity-80 "

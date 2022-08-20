@@ -44,17 +44,37 @@ export const BlogsQuery = extendType({
   },
 });
 
+export const BlogsByUserQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.list.field("blogsByUser", {
+      type: "Blog",
+      args: {
+        user_id: stringArg(),
+      },
+      async resolve(_, args, ctx) {
+        return await ctx.prisma.blog.findMany({
+          where: {
+            authorId: args.user_id as string,
+            status: "PUBLISHED",
+          },
+        });
+      },
+    });
+  },
+});
+
 export const BlogQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.field("blog", {
+    t.field("blog", {
       type: "Blog",
       args: {
         blog_id: stringArg(),
       },
       async resolve(_, args, ctx) {
-        return await ctx.prisma.blog.findUnique({
-          where: { id: args.blog_id },
+        return await ctx.prisma.blog.findFirstOrThrow({
+          where: { id: args.blog_id as string, status: "PUBLISHED" },
         });
       },
     });

@@ -18,6 +18,7 @@ export const UserDetailFields = gql`
     role
     posts {
       ...BlogsListItemFields
+      status
     }
   }
   ${UserListItemFields}
