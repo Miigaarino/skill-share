@@ -1,4 +1,4 @@
-import { enumType, extendType, objectType, stringArg } from "nexus";
+import { enumType, extendType, nonNull, objectType, stringArg } from "nexus";
 import { Blog } from "./Blog";
 
 export const User = objectType({
@@ -50,6 +50,66 @@ export const UserQuery = extendType({
       async resolve(_, args, ctx) {
         return await ctx.prisma.user.findUnique({
           where: { id: args.user_id },
+        });
+      },
+    });
+  },
+});
+
+export const BecomeAdminMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.nonNull.field("becomeAdmin", {
+      type: User,
+      args: {
+        user_id: nonNull(stringArg()),
+      },
+      async resolve(_parent, args, ctx) {
+        if (!ctx.session) {
+          throw new Error(`You need to be logged in to perform an action`);
+        }
+
+        return await ctx.prisma.user.update({
+          where: {
+            id: args.user_id,
+          },
+          data: {
+            role: "ADMIN",
+          },
+        });
+      },
+    });
+  },
+});
+
+export const updateProfileMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.nonNull.field("updateProfile", {
+      type: User,
+      args: {
+        user_id: nonNull(stringArg()),
+        image: stringArg(),
+        name: stringArg(),
+        email: stringArg(),
+      },
+      async resolve(_parent, args, ctx) {
+        if (!ctx.session) {
+          throw new Error(`You need to be logged in to perform an action`);
+        }
+        if (ctx?.session?.user?.id !== args.user_id) {
+          throw new Error(`U can only edit your profile`);
+        }
+
+        return await ctx.prisma.user.update({
+          where: {
+            id: args.user_id,
+          },
+          data: {
+            image: args.image,
+            name: args.name,
+            email: args.email,
+          },
         });
       },
     });

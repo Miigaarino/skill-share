@@ -19,6 +19,14 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Mutation {
+  approveBlog(blog_id: String!): Blog
+  becomeAdmin(user_id: String!): User!
+  createBlog(author_id: String!, banner: String!, content: String!, title: String!): Blog
+  updateBlog(author_id: String!, banner: String, blog_id: String!, content: String, title: String): Blog
+  updateProfile(email: String, image: String, name: String, user_id: String!): User!
+}
+
 type Query {
   blog(blog_id: String): Blog
   blogs: [Blog]!
