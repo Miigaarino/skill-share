@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { ChangeEvent, InputHTMLAttributes } from "react";
 
 import { useSession } from "next-auth/react";
 
@@ -62,12 +62,42 @@ export default function CreateBlog() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isDirty },
   } = methods;
 
   const [createBlog] = useMutation<MutationData, MutationVars>(Mutation, {
     refetchQueries: [Query],
   });
+
+  async function uploadPhoto(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files && e.target.files[0];
+    const filename = encodeURIComponent(file?.name as string);
+    try {
+      const res = await fetch(`/api/upload-image?file=${filename}`);
+      const data = await res.json();
+      const formData = new FormData();
+
+      Object.entries({ ...data.fields, file }).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+
+      await toast.promise(
+        fetch(data.url, {
+          method: "POST",
+          body: formData,
+        }),
+        {
+          loading: "Uploading...",
+          success: "Image successfully uploaded!🎉",
+          error: `Upload failed 😥 Please try again`,
+        }
+      );
+      setValue("banner", filename, { shouldDirty: true });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function onSubmit({
     title,
@@ -79,9 +109,16 @@ export default function CreateBlog() {
     content: string;
   }) {
     try {
+      const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${banner}`;
+
       toast.promise(
         createBlog({
-          variables: { author_id: session?.user?.id, banner, content, title },
+          variables: {
+            author_id: session?.user?.id,
+            banner: imageUrl,
+            content,
+            title,
+          },
         }),
         {
           loading: "Creating...",
@@ -112,7 +149,18 @@ export default function CreateBlog() {
                 <div className="shadow sm:overflow-hidden sm:rounded-md">
                   <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                     <Input name="title" title="Title" />
-                    <Input name="banner" title="Banner" />
+                    <p className="text-sm font-medium text-gray-700">Banner</p>
+                    <label className="block">
+                      <span className="text-gray-700">
+                        Upload a .png or .jpg image (max 1MB).
+                      </span>
+                      <input
+                        onChange={uploadPhoto}
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg"
+                        name="image"
+                      />
+                    </label>
                     <div>
                       <label
                         htmlFor="Content"

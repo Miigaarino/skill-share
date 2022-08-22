@@ -17,6 +17,7 @@
     "@tanstack/react-table": "^8.5.11",
     "apollo-server-core": "^3.10.1",
     "apollo-server-micro": "^3.10.1",
+    "aws-sdk": "^2.1199.0",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.18.0",
     "graphql-tag": "^2.12.6",
