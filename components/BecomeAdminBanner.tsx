@@ -30,7 +30,7 @@ export function BecomeAdminBanner() {
   function onClick() {
     try {
       toast.promise(
-        becomeAdmin({ variables: { user_id: session?.user?.id } }),
+        becomeAdmin({ variables: { user_id: session?.user.id as string } }),
         {
           loading: "Becoming adminnnn...",
           success: "You are now admin!🎉",
@@ -73,7 +73,7 @@ export function BecomeAdminBanner() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="-mr-1 flex rounded-md p-2 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white"
+                className="-mr-1 flex rounded-md p-2 hover:bg-indigo-500"
               >
                 <XIcon className="h-6 w-6 text-white" />
               </button>

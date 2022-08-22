@@ -10,7 +10,7 @@ type Blog {
   createdAt: String
   id: String
   likes: Int
-  status: Status
+  status: PostStatus
   title: String
   updatedAt: String
 }
@@ -21,11 +21,17 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
-  approveBlog(blog_id: String!): Blog
   becomeAdmin(user_id: String!): User!
   createBlog(author_id: String!, banner: String!, content: String!, title: String!): Blog
+  reviewBlog(blog_id: String!, status: PostStatus!): Blog
   updateBlog(author_id: String!, banner: String, blog_id: String!, content: String, title: String): Blog
   updateProfile(email: String, image: String, name: String, user_id: String!): User!
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  REJECTED
 }
 
 type Query {
@@ -40,12 +46,6 @@ type Query {
 enum Role {
   ADMIN
   BASIC
-}
-
-enum Status {
-  DRAFT
-  PUBLISHED
-  REJECTED
 }
 
 type User {

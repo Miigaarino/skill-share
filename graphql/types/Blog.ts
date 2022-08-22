@@ -195,13 +195,14 @@ export const UpdateBlogMutation = extendType({
   },
 });
 
-export const ApproveBlogMutation = extendType({
+export const ReviewBlogMutation = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("approveBlog", {
+    t.field("reviewBlog", {
       type: Blog,
       args: {
         blog_id: nonNull(stringArg()),
+        status: nonNull(status),
       },
       async resolve(_parent, args, ctx) {
         if (!ctx.session) {
@@ -209,7 +210,7 @@ export const ApproveBlogMutation = extendType({
         }
 
         if (ctx?.session?.user?.role !== "ADMIN") {
-          throw new Error(`Only admin can approve posts`);
+          throw new Error(`Only admin can review posts`);
         }
 
         return await ctx.prisma.blog.update({
@@ -217,7 +218,8 @@ export const ApproveBlogMutation = extendType({
             id: args.blog_id,
           },
           data: {
-            status: "PUBLISHED",
+            status: args.status,
+            approvedById: ctx?.session?.user.id,
           },
         });
       },
@@ -226,6 +228,6 @@ export const ApproveBlogMutation = extendType({
 });
 
 const status = enumType({
-  name: "Status",
+  name: "PostStatus",
   members: ["DRAFT", "PUBLISHED", "REJECTED"],
 });

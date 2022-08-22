@@ -6,6 +6,7 @@ import { Query, QueryData, QueryVars } from "queries/BlogsByUserQuery";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { User } from "types";
 
 export default function Author() {
   const {
@@ -31,7 +32,7 @@ export default function Author() {
       <HorizontalContainer>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
-            <UserCard user={session?.user} />
+            <UserCard user={session?.user as User} />
           </div>
 
           <div className="rounded-3xl p-8 shadow-xl">

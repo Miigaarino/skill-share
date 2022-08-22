@@ -66,9 +66,12 @@ export default function CreateBlog() {
     formState: { errors, isDirty },
   } = methods;
 
-  const [createBlog] = useMutation<MutationData, MutationVars>(Mutation, {
-    refetchQueries: [Query],
-  });
+  const [createBlog, { loading }] = useMutation<MutationData, MutationVars>(
+    Mutation,
+    {
+      refetchQueries: [Query],
+    }
+  );
 
   async function uploadPhoto(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files && e.target.files[0];
@@ -114,7 +117,7 @@ export default function CreateBlog() {
       toast.promise(
         createBlog({
           variables: {
-            author_id: session?.user?.id,
+            author_id: session?.user.id as string,
             banner: imageUrl,
             content,
             title,
@@ -184,7 +187,7 @@ export default function CreateBlog() {
                   <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                     <button
                       type="submit"
-                      disabled={!isDirty}
+                      disabled={!isDirty || loading}
                       className="inline-flex justify-center rounded-md border border-transparent bg-cool-cyan py-2 px-4 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-cool-cyan focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       Create

@@ -7,7 +7,8 @@ import {
 } from "@tanstack/react-table";
 import Link from "next/link";
 import { Blog } from "types";
-import { classNames, toLocaleDate } from "utils";
+import { toLocaleDate } from "utils";
+import { STATUS } from "./AllPostsTable";
 
 const columnHelper = createColumnHelper<Blog>();
 
@@ -41,18 +42,7 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     header: "Status",
-    cell: (info) => (
-      <span
-        className={classNames(
-          "inline-flex rounded-full  px-2 text-xs font-semibold leading-5 ",
-          info.getValue() === "PUBLISHED"
-            ? "bg-green-100 text-green-800"
-            : "bg-gray-300 text-gray-800"
-        )}
-      >
-        {info.getValue()}
-      </span>
-    ),
+    cell: (info) => STATUS[info.getValue()],
   }),
   columnHelper.accessor("likes", {
     header: "Likes",

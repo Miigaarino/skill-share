@@ -1,16 +1,11 @@
+import { UserSession } from "types";
 import { toLocaleDate } from "utils";
 
 /* eslint-disable @next/next/no-img-element */
 export function UserCard({
   user,
 }: {
-  user: {
-    name: string;
-    email: string;
-    image: string;
-    reputation_point: number;
-    createdAt: string;
-  };
+  user: UserSession & { reputation_point: number };
 }) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow">

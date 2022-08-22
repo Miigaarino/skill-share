@@ -11,6 +11,36 @@ import { classNames, toLocaleDate } from "utils";
 
 const columnHelper = createColumnHelper<Blog>();
 
+export const STATUS = {
+  PUBLISHED: (
+    <span
+      className={classNames(
+        "inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800"
+      )}
+    >
+      PUBLISHED
+    </span>
+  ),
+  DRAFT: (
+    <span
+      className={classNames(
+        "inline-flex rounded-full bg-gray-300 px-2 text-xs font-semibold leading-5 text-gray-800"
+      )}
+    >
+      DRAFT
+    </span>
+  ),
+  REJECTED: (
+    <span
+      className={classNames(
+        "inline-flex rounded-full bg-red-300 px-2 text-xs font-semibold leading-5 text-red-600"
+      )}
+    >
+      REJECTED
+    </span>
+  ),
+};
+
 const columns = [
   columnHelper.accessor("banner", {
     header: "Banner",
@@ -22,7 +52,6 @@ const columns = [
       />
     ),
   }),
-
   columnHelper.accessor("title", {
     header: "Title",
     cell: (info) => (
@@ -41,18 +70,7 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     header: "Status",
-    cell: (info) => (
-      <span
-        className={classNames(
-          "inline-flex rounded-full  px-2 text-xs font-semibold leading-5 ",
-          info.getValue() === "PUBLISHED"
-            ? "bg-green-100 text-green-800"
-            : "bg-gray-300 text-gray-800"
-        )}
-      >
-        {info.getValue()}
-      </span>
-    ),
+    cell: (info) => STATUS[info.getValue()],
   }),
   columnHelper.accessor("likes", {
     header: "Likes",

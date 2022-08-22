@@ -25,3 +25,12 @@ export interface User extends SchemaType {
   name: string;
   reputation_point: number;
 }
+
+export interface UserSession {
+  id: string;
+  role: UserRole;
+  email: string;
+  image: string;
+  name: string;
+  createdAt: string;
+}

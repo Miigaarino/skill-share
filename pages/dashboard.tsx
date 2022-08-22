@@ -30,7 +30,7 @@ export default function Dashboard() {
   const [tabIndex, setTabIndex] = useState<"0" | "1">("0");
 
   const { data, loading, error } = useQuery<QueryData, QueryVars>(Query, {
-    variables: { user_id: session?.user?.id },
+    variables: { user_id: session?.user.id as string },
   });
 
   if (loading) {
@@ -49,7 +49,7 @@ export default function Dashboard() {
           <div className="mx-auto mt-8 max-w-3xl">
             <div className="sm:hidden">
               <select
-                className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                className="block w-full rounded-md border-gray-300"
                 value={tabIndex}
                 onChange={({ target: { value } }) =>
                   setTabIndex(value as "0" | "1")
@@ -74,7 +74,7 @@ export default function Dashboard() {
                         : "text-gray-500 hover:text-gray-700",
                       tabIdx === 0 ? "rounded-l-lg" : "",
                       tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                      "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                      "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50"
                     )}
                   >
                     <span>{tab.name}</span>
