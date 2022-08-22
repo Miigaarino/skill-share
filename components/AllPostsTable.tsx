@@ -1,12 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Link from "next/link";
+
 import { Blog } from "types";
+
 import { classNames, toLocaleDate } from "utils";
 
 const columnHelper = createColumnHelper<Blog>();
@@ -70,7 +73,16 @@ const columns = [
   }),
   columnHelper.accessor("status", {
     header: "Status",
-    cell: (info) => STATUS[info.getValue()],
+    cell: (info) => (
+      <>
+        {STATUS[info.getValue()]}
+        {info.row.original.approvedBy ? (
+          <p className="cursor-pointer text-[10px] hover:underline">
+            By {info.row.original.approvedBy?.name}
+          </p>
+        ) : null}
+      </>
+    ),
   }),
   columnHelper.accessor("likes", {
     header: "Likes",

@@ -13,6 +13,7 @@ export interface Blog extends SchemaType {
   content: string;
   likes: number;
   author: User;
+  approvedBy: User;
   banner: string;
   status: BlogStatus;
 }

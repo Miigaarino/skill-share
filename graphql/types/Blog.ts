@@ -26,7 +26,7 @@ export const Blog = objectType({
               id: parent.id as string,
             },
           })
-          .author();
+          .approvedBy();
       },
     });
     t.field("author", {

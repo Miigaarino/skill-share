@@ -18,6 +18,10 @@ export const Query = gql`
         name
         image
       }
+      approvedBy {
+        id
+        name
+      }
     }
     users {
       ...UserListItemFields
