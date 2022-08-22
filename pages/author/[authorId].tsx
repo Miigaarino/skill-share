@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 
-import { BlogCard, HorizontalContainer, Loader } from "components";
+import { BlogCard, HorizontalContainer, Loader, UserCard } from "components";
 
 import { Query, QueryData, QueryVars } from "queries/BlogsByUserQuery";
 import { useQuery } from "@apollo/client";
@@ -32,24 +31,7 @@ export default function Author() {
       <HorizontalContainer>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
-            <div className="flex items-center rounded-3xl p-4 shadow-xl md:p-8">
-              <img
-                className="mr-4 aspect-square h-20 rounded-full object-cover md:mr-8 lg:h-40"
-                src={session?.user?.image as string}
-                alt={session?.user?.name as string}
-              />
-              <div className="flex flex-col">
-                <p className="mb-2 text-xl font-bold md:text-2xl">
-                  {session?.user?.name}
-                </p>
-                <p className="mb-4 text-sm sm:text-base md:mb-8">
-                  {session?.user?.email}
-                </p>
-                <p className="text-sm sm:text-base">
-                  Joined on {session?.user?.createdAt}
-                </p>
-              </div>
-            </div>
+            <UserCard user={session?.user} />
           </div>
 
           <div className="rounded-3xl p-8 shadow-xl">

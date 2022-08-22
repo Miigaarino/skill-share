@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 
 import { Topbar } from "components";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { Toaster } from "react-hot-toast";
 
 const client = new ApolloClient({
   uri: "http://localhost:3000/api/graphql",
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <ApolloProvider client={client}>
       <SessionProvider session={session} refetchInterval={5 * 60}>
         <Topbar />
+        <Toaster />
         <Component {...pageProps} />
       </SessionProvider>
     </ApolloProvider>

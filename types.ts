@@ -4,7 +4,7 @@ interface SchemaType {
   updatedAt: string;
 }
 
-type BlogStatus = "DRAFT" | "PUBLISHED";
+type BlogStatus = "DRAFT" | "PUBLISHED" | "REJECTED";
 
 type UserRole = "BASIC" | "ADMIN";
 

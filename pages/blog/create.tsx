@@ -1,0 +1,153 @@
+import { InputHTMLAttributes } from "react";
+
+import { useSession } from "next-auth/react";
+
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+
+import { useMutation } from "@apollo/client";
+
+import toast from "react-hot-toast";
+
+import { HorizontalContainer } from "components";
+
+import {
+  Mutation,
+  MutationData,
+  MutationVars,
+} from "queries/CreateBlogMutation";
+import { Query } from "queries/UserQuery";
+
+function Input({
+  className,
+  title,
+  name,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
+  return (
+    <div>
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        {title}
+      </label>
+      <input
+        type="text"
+        id={name}
+        autoComplete={name}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-cool-cyan focus:ring-cool-cyan sm:text-sm ${className}`}
+        {...props}
+        {...register(name as string, { required: true })}
+      />
+      {errors[name as string] && (
+        <p className=" text-red-500">Заавал оруулна уу</p>
+      )}
+    </div>
+  );
+}
+
+export default function CreateBlog() {
+  const methods = useForm({
+    defaultValues: {
+      title: "",
+      banner: "",
+      content: "",
+    },
+  });
+
+  const { data: session } = useSession();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = methods;
+
+  const [createBlog] = useMutation<MutationData, MutationVars>(Mutation, {
+    refetchQueries: [Query],
+  });
+
+  function onSubmit({
+    title,
+    banner,
+    content,
+  }: {
+    title: string;
+    banner: string;
+    content: string;
+  }) {
+    try {
+      toast.promise(
+        createBlog({
+          variables: { author_id: session?.user?.id, banner, content, title },
+        }),
+        {
+          loading: "Creating...",
+          success: "Blog created!🎉",
+          error: `Create failed 😥 Please try again`,
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <main className="my-8">
+      <HorizontalContainer>
+        <div className="md:grid md:grid-cols-3 md:gap-6">
+          <div className="md:col-span-1">
+            <div className="px-4 sm:px-0">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Blog
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">Create your own blog</p>
+            </div>
+          </div>
+          <div className="mt-5 md:col-span-2 md:mt-0">
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="shadow sm:overflow-hidden sm:rounded-md">
+                  <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                    <Input name="title" title="Title" />
+                    <Input name="banner" title="Banner" />
+                    <div>
+                      <label
+                        htmlFor="Content"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Content
+                      </label>
+                      <div className="mt-1">
+                        <textarea
+                          id="Content"
+                          rows={10}
+                          className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-cool-cyan focus:ring-cool-cyan sm:text-sm"
+                          {...register("content", { required: true })}
+                        />
+                        {errors["content"] && (
+                          <p className=" text-red-500">Заавал оруулна уу</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                    <button
+                      type="submit"
+                      disabled={!isDirty}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-cool-cyan py-2 px-4 text-sm font-medium text-white shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-cool-cyan focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      Create
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </FormProvider>
+          </div>
+        </div>
+      </HorizontalContainer>
+    </main>
+  );
+}

@@ -17,6 +17,18 @@ export const Blog = objectType({
     t.int("likes");
     t.string("content");
     t.string("banner");
+    t.field("approvedBy", {
+      type: User,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.blog
+          .findUnique({
+            where: {
+              id: parent.id as string,
+            },
+          })
+          .author();
+      },
+    });
     t.field("author", {
       type: User,
       async resolve(parent, _args, ctx) {
@@ -32,13 +44,33 @@ export const Blog = objectType({
   },
 });
 
-export const BlogsQuery = extendType({
+export const PublishedBlogsQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.field("blogs", {
+    t.nonNull.list.field("publishedBlogs", {
       type: "Blog",
       resolve(_, __, ctx) {
         return ctx.prisma.blog.findMany({ where: { status: "PUBLISHED" } });
+      },
+    });
+  },
+});
+
+export const AllBlogsQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.nonNull.list.field("allBlogs", {
+      type: "Blog",
+      resolve(_, __, ctx) {
+        if (!ctx.session) {
+          throw new Error(`You need to be logged in to perform an action`);
+        }
+
+        if (ctx?.session?.user?.role !== "ADMIN") {
+          throw new Error(`Only admin can see all the blogs`);
+        }
+
+        return ctx.prisma.blog.findMany({ orderBy: { createdAt: "desc" } });
       },
     });
   },
@@ -73,6 +105,23 @@ export const BlogQuery = extendType({
         blog_id: stringArg(),
       },
       async resolve(_, args, ctx) {
+        if (ctx.session?.user?.role === "ADMIN") {
+          return await ctx.prisma.blog.findFirstOrThrow({
+            where: {
+              id: args.blog_id as string,
+            },
+          });
+        }
+
+        if (ctx.session?.user?.id) {
+          return await ctx.prisma.blog.findFirstOrThrow({
+            where: {
+              id: args.blog_id as string,
+              authorId: ctx.session?.user?.id,
+            },
+          });
+        }
+
         return await ctx.prisma.blog.findFirstOrThrow({
           where: { id: args.blog_id as string, status: "PUBLISHED" },
         });
@@ -178,5 +227,5 @@ export const ApproveBlogMutation = extendType({
 
 const status = enumType({
   name: "Status",
-  members: ["DRAFT", "PUBLISHED"],
+  members: ["DRAFT", "PUBLISHED", "REJECTED"],
 });

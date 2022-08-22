@@ -3,6 +3,7 @@
 
 
 type Blog {
+  approvedBy: User
   author: User
   banner: String
   content: String
@@ -28,9 +29,10 @@ type Mutation {
 }
 
 type Query {
+  allBlogs: [Blog]!
   blog(blog_id: String): Blog
-  blogs: [Blog]!
   blogsByUser(user_id: String): [Blog]!
+  publishedBlogs: [Blog]!
   user(user_id: String): User!
   users: [User]!
 }
@@ -43,9 +45,11 @@ enum Role {
 enum Status {
   DRAFT
   PUBLISHED
+  REJECTED
 }
 
 type User {
+  approvedPosts: [Blog]
   createdAt: String
   email: String
   id: String

@@ -24,6 +24,18 @@ export const User = objectType({
           .posts();
       },
     });
+    t.list.field("approvedPosts", {
+      type: Blog,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.user
+          .findUnique({
+            where: {
+              id: parent.id as string,
+            },
+          })
+          .posts();
+      },
+    });
   },
 });
 
@@ -33,6 +45,14 @@ export const UsersQuery = extendType({
     t.nonNull.list.field("users", {
       type: "User",
       resolve(_, __, ctx) {
+        if (!ctx.session) {
+          throw new Error(`You need to be logged in to perform an action`);
+        }
+
+        if (ctx?.session?.user?.role !== "ADMIN") {
+          throw new Error(`Only admin can see all the users`);
+        }
+
         return ctx.prisma.user.findMany();
       },
     });

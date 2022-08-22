@@ -14,6 +14,7 @@ export const BlogDetailFields = gql`
   fragment BlogDetailFields on Blog {
     ...BlogsListItemFields
     content
+    status
     author {
       id
       name

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/router";
 
-import { HorizontalContainer, Loader } from "components";
+import { Alert, HorizontalContainer, Loader } from "components";
 
 import { Query, QueryData, QueryVars } from "queries/BlogQuery";
 import { useQuery } from "@apollo/client";
@@ -29,6 +29,12 @@ export default function Blog() {
     <main className="py-8">
       <HorizontalContainer>
         <article className="mx-auto max-w-3xl">
+          {data?.blog.status === "DRAFT" ? (
+            <Alert
+              title="Blog is draft"
+              description="Waiting for admin's approval"
+            />
+          ) : null}
           <h1 className="mb-4 text-3xl font-bold">{data?.blog.title}</h1>
           <p className="mb-8">
             Published on {toLocaleDate(data?.blog.createdAt as string)}

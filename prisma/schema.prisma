@@ -47,7 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  posts         Blog[]
+  posts         Blog[] @relation("own")
+  approvedPosts         Blog[] @relation("approved")
   role Role @default(BASIC)
   reputation_point Int @default(0)
 }
@@ -68,14 +69,17 @@ model Blog {
   content String
   banner String
   status PostStatus @default(DRAFT)
-  author User @relation(fields: [authorId],references: [id])
+  author User @relation("own",fields: [authorId],references: [id])
+  approvedBy User? @relation("approved",fields: [approvedById],references: [id])
   authorId String
+  approvedById String?
   likes Int @default(0)
 }
 
 enum PostStatus {
   DRAFT
   PUBLISHED
+  REJECTED
 }
 
 enum Role {

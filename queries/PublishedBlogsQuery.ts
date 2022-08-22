@@ -7,8 +7,8 @@ export type QueryData = {
 };
 
 export const Query = gql`
-  query BlogsQuery {
-    blogs {
+  query PublishedBlogsQuery {
+    blogs: publishedBlogs {
       ...BlogsListItemFields
     }
   }

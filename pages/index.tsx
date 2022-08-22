@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 
 import { BlogCard, HorizontalContainer, Loader } from "components";
 
-import { Query, QueryData } from "queries/BlogsQuery";
+import { Query, QueryData } from "queries/PublishedBlogsQuery";
 
 const Home: NextPage = () => {
   const { data, loading, error } = useQuery<QueryData>(Query);
