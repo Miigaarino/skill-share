@@ -51,6 +51,8 @@ model User {
   approvedPosts         Blog[] @relation("approved")
   role Role @default(BASIC)
   reputation_point Int @default(0)
+  likedPosts    LikedPosts[]
+  comments      Comment[]
 }
 
 model VerificationToken {
@@ -74,6 +76,27 @@ model Blog {
   authorId String
   approvedById String?
   likes Int @default(0)
+  likedBy     LikedPosts[]
+  comments    Comment[]
+}
+
+model LikedPosts {
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  @@id([blogId, userId])
+}
+
+model Comment {
+  id          String      @id @default(uuid())
+  content     String   
+  createdAt   DateTime @default(now())
+  blog        Blog     @relation(fields: [blogId], references: [id])
+  blogId      String
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
 }
 
 enum PostStatus {
