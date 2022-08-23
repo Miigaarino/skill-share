@@ -59,7 +59,7 @@ const columns = [
     header: "Title",
     cell: (info) => (
       <div className="mr-2 w-24 py-4 text-gray-500 md:w-48">
-        <Link href={`blog/${info.row.original.id}`}>
+        <Link href={`/blog/${info.row.original.id}`}>
           <a className="hover:underline">{info.getValue()}</a>
         </Link>
       </div>
@@ -74,14 +74,16 @@ const columns = [
   columnHelper.accessor("status", {
     header: "Status",
     cell: (info) => (
-      <>
-        {STATUS[info.getValue()]}
+      <div className="flex flex-col">
+        <div>{STATUS[info.getValue()]}</div>
         {info.row.original.approvedBy ? (
-          <p className="cursor-pointer text-[10px] hover:underline">
-            By {info.row.original.approvedBy?.name}
-          </p>
+          <Link href={`/user/${info.row.original.approvedBy.id}`}>
+            <a className="inline-block cursor-pointer text-[10px] hover:underline">
+              By {info.row.original.approvedBy?.name}
+            </a>
+          </Link>
         ) : null}
-      </>
+      </div>
     ),
   }),
   columnHelper.accessor("likes", {
@@ -98,7 +100,7 @@ const columns = [
       const author = info.getValue();
       return (
         <Link href={`/author/${author.id}`}>
-          <a className="m-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl p-2 text-gray-500 shadow-lg hover:opacity-70">
+          <a className="m-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl bg-gray-50 p-2 text-gray-500 shadow-lg hover:opacity-70">
             <img
               src={author.image}
               alt={author.name}
@@ -112,15 +114,22 @@ const columns = [
   }),
 ];
 
-export function AllPostsTable({ data }: { data: Blog[] }) {
+export function AllPostsTable({
+  data,
+  admin = false,
+}: {
+  data: Blog[];
+  admin?: boolean;
+}) {
   const table = useReactTable({
     data,
     columns,
+    initialState: { columnVisibility: { author: admin } },
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <table className="min-w-full divide-y divide-gray-300">
+    <table className="min-w-full divide-y divide-gray-300 bg-gray-50">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id} className="flex-1">

@@ -6,13 +6,23 @@ type Blog {
   approvedBy: User
   author: User
   banner: String
+  comments: [Comment]
   content: String
   createdAt: String
   id: String
+  likedBy: [LikedPosts]
   likes: Int
   status: PostStatus
   title: String
   updatedAt: String
+}
+
+type Comment {
+  author: User
+  blog: Blog
+  content: String
+  createdAt: String
+  id: String
 }
 
 """
@@ -20,9 +30,17 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type LikedPosts {
+  blog: Blog
+  createdAt: String
+  user: User
+}
+
 type Mutation {
+  addComment(blog_id: String!, content: String!): Blog
   becomeAdmin(user_id: String!): User!
   createBlog(author_id: String!, banner: String!, content: String!, title: String!): Blog
+  like(blog_id: String!): LikedPosts
   reviewBlog(blog_id: String!, status: PostStatus!): Blog
   updateBlog(author_id: String!, banner: String, blog_id: String!, content: String, title: String): Blog
   updateProfile(email: String, image: String, name: String, user_id: String!): User!
@@ -36,6 +54,7 @@ enum PostStatus {
 
 type Query {
   allBlogs: [Blog]!
+  allComments: [Comment]!
   blog(blog_id: String): Blog
   blogsByUser(user_id: String): [Blog]!
   publishedBlogs: [Blog]!
@@ -50,10 +69,12 @@ enum Role {
 
 type User {
   approvedPosts: [Blog]
+  comments: [Comment]
   createdAt: String
   email: String
   id: String
   image: String
+  likedPosts: [LikedPosts]
   name: String
   posts: [Blog]
   reputation_point: Int

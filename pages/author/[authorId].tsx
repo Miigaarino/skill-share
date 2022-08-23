@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 
+import Link from "next/link";
+
+import { useQuery } from "@apollo/client";
+
 import { BlogCard, HorizontalContainer, Loader, UserCard } from "components";
 
 import { Query, QueryData, QueryVars } from "queries/BlogsByUserQuery";
-import { useQuery } from "@apollo/client";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { User } from "types";
+
+import { UserSession } from "types";
 
 export default function Author() {
   const {
@@ -16,8 +18,6 @@ export default function Author() {
   const { data, loading, error } = useQuery<QueryData, QueryVars>(Query, {
     variables: { user_id: authorId as string },
   });
-
-  const { data: session } = useSession();
 
   if (loading) {
     return <Loader />;
@@ -32,7 +32,9 @@ export default function Author() {
       <HorizontalContainer>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
-            <UserCard user={session?.user as User} />
+            <UserCard
+              user={data?.user as UserSession & { reputation_point: number }}
+            />
           </div>
 
           <div className="rounded-3xl p-8 shadow-xl">

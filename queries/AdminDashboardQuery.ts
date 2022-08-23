@@ -1,11 +1,12 @@
 import { gql } from "graphql-tag";
-import { Blog, User } from "types";
+import { Blog, Comment, User } from "types";
 import { BlogsListItemFields } from "./fragments/BlogFields";
 import { UserListItemFields } from "./fragments/UserFields";
 
 export type QueryData = {
   allBlogs: Blog[];
   users: User[];
+  allComments: Comment[];
 };
 
 export const Query = gql`
@@ -29,6 +30,20 @@ export const Query = gql`
       posts {
         id
         status
+      }
+    }
+    allComments {
+      id
+      content
+      createdAt
+      blog {
+        id
+        title
+      }
+      author {
+        id
+        name
+        email
       }
     }
   }

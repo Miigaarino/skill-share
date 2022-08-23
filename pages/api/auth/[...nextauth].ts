@@ -11,6 +11,7 @@ export default authHandler;
 export const options: NextAuthOptions = {
   adapter: PrismaAdapter(prismaClient),
   callbacks: {
+    //@ts-ignore
     async session({ session, user }) {
       return {
         ...session,

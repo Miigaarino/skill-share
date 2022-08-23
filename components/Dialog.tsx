@@ -1,5 +1,6 @@
-import { Transition, Dialog as TWDialog } from "@headlessui/react";
 import { Fragment, ReactNode } from "react";
+
+import { Transition, Dialog as TWDialog } from "@headlessui/react";
 
 export function Dialog({
   open,

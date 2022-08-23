@@ -1,14 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Link from "next/link";
-import { Blog } from "types";
+
 import { toLocaleDate } from "utils";
+
 import { STATUS } from "./AllPostsTable";
+
+import { Blog } from "types";
 
 const columnHelper = createColumnHelper<Blog>();
 
@@ -28,7 +32,7 @@ const columns = [
     header: "Title",
     cell: (info) => (
       <div className="mr-2 w-24 py-4 text-gray-500 md:w-48">
-        <Link href={`blog/${info.row.original.id}`}>
+        <Link href={`/blog/${info.row.original.id}`}>
           <a className="hover:underline">{info.getValue()}</a>
         </Link>
       </div>
@@ -62,7 +66,7 @@ export function UserPostsTable({ data }: { data: Blog[] }) {
   });
 
   return (
-    <table className="min-w-full divide-y divide-gray-300">
+    <table className="min-w-full divide-y divide-gray-300 bg-gray-50">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id} className="flex-1">

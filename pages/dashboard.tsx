@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+import { useState } from "react";
+
 import Router from "next/router";
 
 import { useSession } from "next-auth/react";
@@ -12,12 +14,13 @@ import {
   HorizontalContainer,
   Loader,
   UserCard,
+  UserComments,
+  UserLikedPosts,
   UserPostsTable,
 } from "components";
 
 import { Query, QueryData, QueryVars } from "queries/UserQuery";
 import { classNames } from "utils";
-import { useState } from "react";
 
 const tabs: { id: "0" | "1"; name: string }[] = [
   { id: "0", name: "My Account" },
@@ -25,16 +28,22 @@ const tabs: { id: "0" | "1"; name: string }[] = [
 ];
 
 export default function Dashboard() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  const [tabIndex, setTabIndex] = useState<"0" | "1">("0");
+  const sessionLoading = status === "loading";
+
+  const [tabIndex, setTabIndex] = useState<"0" | "1">("1");
 
   const { data, loading, error } = useQuery<QueryData, QueryVars>(Query, {
     variables: { user_id: session?.user.id as string },
   });
 
-  if (loading) {
+  if (loading || sessionLoading) {
     return <Loader />;
+  }
+
+  if (!session) {
+    return <p>PLEASE LOG IN</p>;
   }
 
   if (error) {
@@ -116,10 +125,28 @@ export default function Dashboard() {
                   </div>
                 </div>
               </section>
+
+              <section>
+                <div className="bg-white p-6 shadow sm:rounded-lg">
+                  <h1 className="mb-4 text-xl font-semibold text-gray-900">
+                    Comments: {data.user.comments.length}
+                  </h1>
+                  <UserComments comments={data.user.comments} />
+                </div>
+              </section>
             </div>
             <div className="grid grid-cols-1 gap-4">
               <section>
                 <UserCard user={data?.user} />
+              </section>
+
+              <section>
+                <div className="bg-white p-6 shadow sm:rounded-lg">
+                  <h1 className="mb-4 text-xl font-semibold text-gray-900">
+                    Liked posts: {data.user.likedPosts.length}
+                  </h1>
+                  <UserLikedPosts likedPosts={data.user.likedPosts} />
+                </div>
               </section>
             </div>
           </div>

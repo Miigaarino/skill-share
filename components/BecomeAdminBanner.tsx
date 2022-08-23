@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+import { useSession } from "next-auth/react";
+
+import { useMutation } from "@apollo/client";
+
+import toast from "react-hot-toast";
+
 import XIcon from "@heroicons/react/solid/XIcon";
 import SpeakerphoneIcon from "@heroicons/react/solid/SpeakerphoneIcon";
 
@@ -8,9 +14,6 @@ import {
   MutationData,
   MutationVars,
 } from "queries/BecomeAdminMutation";
-import { useMutation } from "@apollo/client";
-import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
 
 export function BecomeAdminBanner() {
   const [open, setOpen] = useState(true);

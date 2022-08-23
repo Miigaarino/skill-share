@@ -1,8 +1,18 @@
-import { enumType, extendType, nonNull, objectType, stringArg } from "nexus";
-import { User } from "./User";
+// @ts-nocheck - may need to be at the start of file
+import {
+  asNexusMethod,
+  enumType,
+  extendType,
+  nonNull,
+  objectType,
+  stringArg,
+} from "nexus";
 
-import { asNexusMethod } from "nexus";
 import { DateTimeResolver } from "graphql-scalars";
+
+import { Comment } from "./Comment";
+import { LikedPosts } from "./Like";
+import { User } from "./User";
 
 export const GQLDate = asNexusMethod(DateTimeResolver, "date");
 
@@ -41,6 +51,28 @@ export const Blog = objectType({
           .author();
       },
     });
+    t.list.field("likedBy", {
+      type: LikedPosts,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.likedPosts.findMany({
+          orderBy: { createdAt: "desc" },
+          where: {
+            blogId: parent.id as string,
+          },
+        });
+      },
+    });
+    t.list.field("comments", {
+      type: Comment,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.comment.findMany({
+          orderBy: { createdAt: "desc" },
+          where: {
+            blogId: parent.id as string,
+          },
+        });
+      },
+    });
   },
 });
 
@@ -50,7 +82,9 @@ export const PublishedBlogsQuery = extendType({
     t.nonNull.list.field("publishedBlogs", {
       type: "Blog",
       resolve(_, __, ctx) {
-        return ctx.prisma.blog.findMany({ where: { status: "PUBLISHED" } });
+        return ctx.prisma.blog.findMany({
+          where: { status: "PUBLISHED" },
+        });
       },
     });
   },

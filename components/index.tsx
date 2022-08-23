@@ -11,4 +11,6 @@ export * from "./HorizontalContainer";
 export * from "./Loader";
 export * from "./Topbar";
 export * from "./UserCard";
+export * from "./UserComments";
+export * from "./UserLikedPosts";
 export * from "./UserPotsTable";

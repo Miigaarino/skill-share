@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+
 import { BlogsListItemFields } from "./BlogFields";
 
 export const UserListItemFields = gql`
@@ -16,9 +17,46 @@ export const UserDetailFields = gql`
     ...UserListItemFields
     reputation_point
     role
+    approvedPosts {
+      ...BlogsListItemFields
+      status
+      author {
+        id
+        name
+        image
+      }
+    }
     posts {
       ...BlogsListItemFields
       status
+      approvedBy {
+        id
+        name
+      }
+    }
+    comments {
+      id
+      content
+      createdAt
+      blog {
+        id
+        title
+        author {
+          id
+          name
+        }
+      }
+    }
+    likedPosts {
+      createdAt
+      blog {
+        id
+        title
+        author {
+          id
+          name
+        }
+      }
     }
   }
   ${UserListItemFields}

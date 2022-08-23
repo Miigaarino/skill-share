@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
+
 import { toLocaleDate } from "utils";
 
 export function BlogCard({

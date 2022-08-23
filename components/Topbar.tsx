@@ -3,7 +3,6 @@ import { Fragment } from "react";
 
 import Link from "next/link";
 
-import { DefaultSession } from "next-auth";
 import { signOut, useSession, signIn } from "next-auth/react";
 
 import { Menu, Transition } from "@headlessui/react";
@@ -11,6 +10,8 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 
 import { TreeSVG } from "./svg/Tree";
 import { ProgressSVG } from "./svg/Progress";
+
+import { UserSession } from "types";
 
 export function Topbar() {
   const { data: session, status } = useSession();
@@ -45,11 +46,7 @@ export function Topbar() {
   );
 }
 
-export default function DropdownMenu({
-  user,
-}: {
-  user: DefaultSession["user"];
-}) {
+export default function DropdownMenu({ user }: { user: UserSession }) {
   return user ? (
     <Menu as="div" className="relative inline-block text-left">
       <div>

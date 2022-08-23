@@ -11,7 +11,7 @@ export type QueryVars = {
 };
 
 export const Query = gql`
-  query UserQuery($user_id: String) {
+  query AuthorQuery($user_id: String) {
     user(user_id: $user_id) {
       ...UserDetailFields
     }

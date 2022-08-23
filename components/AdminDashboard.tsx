@@ -1,9 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from "@apollo/client";
-import { PostStatus } from "@prisma/client";
-import { Query, QueryData } from "queries/AdminDashboardQuery";
 import { useEffect, useState } from "react";
+
+import Link from "next/link";
+
+import { useQuery } from "@apollo/client";
+
+import { PostStatus } from "@prisma/client";
+
+import { CalendarIcon } from "@heroicons/react/solid";
+
+import { Query, QueryData } from "queries/AdminDashboardQuery";
+
 import { Blog } from "types";
+
 import { AllPostsTable } from "./AllPostsTable";
 import { Loader } from "./Loader";
 
@@ -43,7 +52,7 @@ export function AdminDashboard() {
                             )
                       )
                     }
-                    className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base sm:text-sm"
                   >
                     <option value={"ALL"}>ALL</option>
                     {[
@@ -59,11 +68,48 @@ export function AdminDashboard() {
                 </div>
               </div>
               <div className="overflow-y-scroll">
-                <AllPostsTable data={tableData} />
+                <AllPostsTable admin data={tableData} />
               </div>
             </div>
           </div>
         </section>
+        <div className="overflow-hidden bg-white shadow sm:rounded-md">
+          <ul role="list" className="divide-y divide-gray-200">
+            {data.allComments.map((comment) => (
+              <li key={comment.id}>
+                <div className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    <p className="truncate text-sm font-medium text-indigo-600">
+                      {new Date(parseInt(comment.createdAt)).toLocaleString()}
+                    </p>
+                    <div className="ml-2 flex">
+                      <Link href={`/blog/${comment.blog.id}`}>
+                        <a className="rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800 hover:opacity-70">
+                          {comment.blog.title}
+                        </a>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <Link href={`/user/${comment.author.id}`}>
+                      <a className="text-sm text-gray-500 hover:underline">
+                        <p>{comment.author.name}</p>
+                        <p>{comment.author.email}</p>
+                      </a>
+                    </Link>
+                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <CalendarIcon
+                        className="mr-1.5 h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                      <p>{comment.content}</p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4">
         <section>
@@ -77,7 +123,7 @@ export function AdminDashboard() {
               <ul className="flex flex-col gap-y-4 divide-y">
                 {data.users.map((item) => (
                   <li key={item.id} className="pt-4">
-                    <div className="flex items-center justify-between border-b-2 pb-4">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <img
                           src={item.image}
@@ -90,30 +136,11 @@ export function AdminDashboard() {
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        className="ml-4 rounded-md p-2 font-medium text-slate-700 shadow-sm ring-1 ring-slate-700/10 hover:bg-slate-50"
-                      >
-                        VIEW
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-base">Reputation point:</p>
-                      <b>{item.reputation_point}</b>
-                    </div>
-                    <p className="text-base">Posts</p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">All:</p>
-                      <b>{item.posts.length}</b>
-                    </div>
-                    <div className="flex items-center justify-between text-green-600">
-                      <p className="text-sm font-medium">Approved:</p>
-                      <b>
-                        {
-                          item.posts.filter((i) => i.status === "PUBLISHED")
-                            .length
-                        }
-                      </b>
+                      <Link href={`/user/${item.id}`}>
+                        <a className="ml-4 rounded-md p-2 font-medium text-slate-700 shadow-sm ring-1 ring-slate-700/10 hover:bg-slate-50">
+                          VIEW
+                        </a>
+                      </Link>
                     </div>
                   </li>
                 ))}

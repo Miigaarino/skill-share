@@ -1,5 +1,8 @@
+// @ts-nocheck - may need to be at the start of file
 import { enumType, extendType, nonNull, objectType, stringArg } from "nexus";
 import { Blog } from "./Blog";
+import { Comment } from "./Comment";
+import { LikedPosts } from "./Like";
 
 export const User = objectType({
   name: "User",
@@ -24,6 +27,26 @@ export const User = objectType({
           .posts();
       },
     });
+    t.list.field("likedPosts", {
+      type: LikedPosts,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.likedPosts.findMany({
+          where: {
+            userId: parent.id as string,
+          },
+        });
+      },
+    });
+    t.list.field("comments", {
+      type: Comment,
+      async resolve(parent, _args, ctx) {
+        return await ctx.prisma.comment.findMany({
+          where: {
+            authorId: parent.id as string,
+          },
+        });
+      },
+    });
     t.list.field("approvedPosts", {
       type: Blog,
       async resolve(parent, _args, ctx) {
@@ -33,7 +56,7 @@ export const User = objectType({
               id: parent.id as string,
             },
           })
-          .posts();
+          .approvedPosts();
       },
     });
   },

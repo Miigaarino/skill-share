@@ -1,5 +1,6 @@
-import { UserSession } from "types";
 import { toLocaleDate } from "utils";
+
+import { UserSession } from "types";
 
 /* eslint-disable @next/next/no-img-element */
 export function UserCard({
@@ -7,6 +8,7 @@ export function UserCard({
 }: {
   user: UserSession & { reputation_point: number };
 }) {
+  console.log(user);
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow">
       <div className="p-6">
@@ -39,7 +41,7 @@ export function UserCard({
           {user.reputation_point ? (
             <div className="flex items-center justify-between">
               <p>Reputation point</p>
-              <p className="text-sm sm:text-base">{}</p>
+              <p className="text-sm sm:text-base">{user.reputation_point}</p>
             </div>
           ) : null}
         </div>
