@@ -6,9 +6,8 @@ import Link from "next/link";
 import { signOut, useSession, signIn } from "next-auth/react";
 
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { BookOpenIcon, ChevronDownIcon } from "@heroicons/react/solid";
 
-import { TreeSVG } from "./svg/Tree";
 import { ProgressSVG } from "./svg/Progress";
 
 import { UserSession } from "types";
@@ -23,7 +22,7 @@ export function Topbar() {
         <div className="flex w-full items-center justify-between border-b py-3 lg:border-none">
           <Link href="/">
             <a>
-              <TreeSVG className="h-6 w-6 fill-cool-cyan" />
+              <BookOpenIcon className="h-6 w-6 fill-cool-cyan" />
             </a>
           </Link>
           {loading ? (
