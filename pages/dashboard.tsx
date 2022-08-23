@@ -89,9 +89,7 @@ export default function Dashboard() {
                     <span>{tab.name}</span>
                     <span
                       className={classNames(
-                        tab.id === tabIndex
-                          ? "bg-indigo-500"
-                          : "bg-transparent",
+                        tab.id === tabIndex ? "bg-cool-cyan" : "bg-transparent",
                         "absolute inset-x-0 bottom-0 h-0.5"
                       )}
                     />

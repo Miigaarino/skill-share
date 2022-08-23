@@ -79,7 +79,7 @@ export function AdminDashboard() {
               <li key={comment.id}>
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
-                    <p className="truncate text-sm font-medium text-indigo-600">
+                    <p className="truncate text-sm font-medium text-cool-cyan">
                       {new Date(parseInt(comment.createdAt)).toLocaleString()}
                     </p>
                     <div className="ml-2 flex">

@@ -48,10 +48,10 @@ export function BecomeAdminBanner() {
   return open ? (
     <div className="fixed inset-x-0 bottom-0 pb-2 opacity-90 sm:pb-5">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="rounded-lg bg-indigo-600 p-2 shadow-lg sm:p-3">
+        <div className="rounded-lg bg-cool-cyan/70 p-2 shadow-lg sm:p-3">
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex w-0 flex-1 items-center">
-              <span className="flex rounded-lg bg-indigo-800 p-2">
+              <span className="flex rounded-lg bg-cool-cyan p-2">
                 <SpeakerphoneIcon
                   className="h-6 w-6 text-white"
                   aria-hidden="true"
@@ -67,7 +67,7 @@ export function BecomeAdminBanner() {
               <button
                 onClick={onClick}
                 type="button"
-                className="flex w-full items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm hover:bg-indigo-50"
+                className="flex w-full items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-cool-cyan shadow-sm hover:bg-cool-cyan/20"
               >
                 Админ болох
               </button>
@@ -76,7 +76,7 @@ export function BecomeAdminBanner() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="-mr-1 flex rounded-md p-2 hover:bg-indigo-500"
+                className="-mr-1 flex rounded-md p-2 hover:bg-cool-cyan"
               >
                 <XIcon className="h-6 w-6 text-white" />
               </button>
