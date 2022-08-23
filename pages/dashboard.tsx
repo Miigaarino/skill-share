@@ -32,7 +32,7 @@ export default function Dashboard() {
 
   const sessionLoading = status === "loading";
 
-  const [tabIndex, setTabIndex] = useState<"0" | "1">("1");
+  const [tabIndex, setTabIndex] = useState<"0" | "1">("0");
 
   const { data, loading, error } = useQuery<QueryData, QueryVars>(Query, {
     variables: { user_id: session?.user.id as string },

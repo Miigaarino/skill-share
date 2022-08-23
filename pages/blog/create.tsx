@@ -16,6 +16,7 @@ import {
   MutationVars,
 } from "queries/CreateBlogMutation";
 import { Query } from "queries/UserQuery";
+import Router from "next/router";
 
 function Input({
   className,
@@ -70,6 +71,7 @@ export default function CreateBlog() {
     Mutation,
     {
       refetchQueries: [Query],
+      onCompleted: (data) => Router.push(`/blog/${data.createBlog.id}`),
     }
   );
 

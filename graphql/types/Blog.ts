@@ -147,13 +147,15 @@ export const BlogQuery = extendType({
           });
         }
 
-        if (ctx.session?.user?.id) {
-          return await ctx.prisma.blog.findFirstOrThrow({
-            where: {
-              id: args.blog_id as string,
-              authorId: ctx.session?.user?.id,
-            },
-          });
+        const ownPost = await ctx.prisma.blog.findFirstOrThrow({
+          where: {
+            id: args.blog_id as string,
+            authorId: ctx.session?.user?.id,
+          },
+        });
+
+        if (ownPost) {
+          return ownPost;
         }
 
         return await ctx.prisma.blog.findFirstOrThrow({
