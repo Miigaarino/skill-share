@@ -8,7 +8,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Toaster } from "react-hot-toast";
 
 const client = new ApolloClient({
-  uri: "https://skill-share.vercel.app/api/graphql",
+  uri: "https://skill-share-coral.vercel.app/api/graphql",
   cache: new InMemoryCache(),
 });
 
